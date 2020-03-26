@@ -1,0 +1,3 @@
+api:
+    type: rest
+    resource: App\Controller\ApiController

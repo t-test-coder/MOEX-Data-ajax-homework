@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homework!{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+<table border="1" width="100%" cellpadding="5">
+  <caption>Таблица данных ММВБ</caption>
+  <thead>
+    <tr>
+      <td>краткое наименование</td>
+      <td>цена последней сделки</td>
+      <td>изменение цены относительно последней цены предыдущего дня</td>
+      <td>объем сделок</td>
+      <td>время последнего обновления</td>
+    </tr>
+  </thead>
+  <tbody id="data">
+
+  </tbody>
+</table>
+<div class="pagination" style="padding: 1rem 0;margin-top: 3px;">
+  <a href="#" attrid="1" style="padding: 1rem;background: #0000001c;">1</a>
+  <a href="#" attrid="2" style="padding: 1rem;background: #0000001c;">2</a>
+  <a href="#" attrid="3" style="padding: 1rem;background: #0000001c;">3</a>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+$( ".pagination a" ).click(function() {
+  $.ajax({
+    url: "/api/getPage/" + $(this).attr('attrid'),
+    cache: false
+  }).done(function( data ) {
+  $("#data").empty();
+      for (var i = 0; i < data.length; i++) {
+        $("#data").append('\
+        <tr>\
+          <td>' + data[i].shortname + '</td>\
+          <td>' + data[i].last + '</td>\
+          <td>' + data[i].changeonday + '</td>\
+          <td>' + data[i].voltoday + '</td>\
+          <td>' + data[i].systime + '</td>\
+        </tr>');
+      }
+  });
+});
+
+$( document ).ready(function() {
+  $.ajax({
+    url: "/api/getPage/1",
+    cache: false
+  }).done(function( data ) {
+    $("#data").empty();
+    for (var i = 0; i < data.length; i++) {
+      $("#data").append('\
+      <tr>\
+        <td>' + data[i].shortname + '</td>\
+        <td>' + data[i].last + '</td>\
+        <td>' + data[i].changeonday + '</td>\
+        <td>' + data[i].voltoday + '</td>\
+        <td>' + data[i].systime + '</td>\
+      </tr>');
+      }
+      return false;
+  });
+});
+
+</script>
+
+{% endblock %}
